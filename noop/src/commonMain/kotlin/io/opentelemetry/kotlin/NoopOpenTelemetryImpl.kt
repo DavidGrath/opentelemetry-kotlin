@@ -18,6 +18,8 @@ import io.opentelemetry.kotlin.factory.TraceFlagsFactory
 import io.opentelemetry.kotlin.factory.TraceStateFactory
 import io.opentelemetry.kotlin.logging.LoggerProvider
 import io.opentelemetry.kotlin.logging.NoopLoggerProvider
+import io.opentelemetry.kotlin.metrics.MeterProvider
+import io.opentelemetry.kotlin.metrics.NoopMeterProvider
 import io.opentelemetry.kotlin.propagation.NoopTextMapPropagator
 import io.opentelemetry.kotlin.propagation.TextMapPropagator
 import io.opentelemetry.kotlin.tracing.NoopTracerProvider
@@ -27,6 +29,7 @@ import io.opentelemetry.kotlin.tracing.TracerProvider
 internal object NoopOpenTelemetryImpl : OpenTelemetrySdk {
     override val tracerProvider: TracerProvider = NoopTracerProvider
     override val loggerProvider: LoggerProvider = NoopLoggerProvider
+    override val meterProvider: MeterProvider = NoopMeterProvider
     override val clock: Clock = NoopClock
     override val spanContext: SpanContextFactory = NoopSpanContextFactory
     override val traceFlags: TraceFlagsFactory = NoopTraceFlagsFactory

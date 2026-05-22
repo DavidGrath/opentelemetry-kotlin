@@ -13,6 +13,7 @@ import io.opentelemetry.kotlin.factory.CompatTraceFlagsFactory
 import io.opentelemetry.kotlin.factory.CompatTraceStateFactory
 import io.opentelemetry.kotlin.init.CompatSpanLimitsConfig
 import io.opentelemetry.kotlin.logging.LoggerProviderAdapter
+import io.opentelemetry.kotlin.metrics.MeterProviderAdapter
 import io.opentelemetry.kotlin.propagation.TextMapPropagatorAdapter
 import io.opentelemetry.kotlin.tracing.TracerProviderAdapter
 
@@ -38,6 +39,7 @@ public fun OtelJavaOpenTelemetry.toOtelKotlinApi(): OpenTelemetry {
     return CompatOpenTelemetryImpl(
         tracerProvider = TracerProviderAdapter(tracerProvider, clock, CompatSpanLimitsConfig()),
         loggerProvider = LoggerProviderAdapter(logsBridge),
+        meterProvider = MeterProviderAdapter(meterProvider),
         clock = clock,
         spanContext = spanContext,
         traceFlags = traceFlags,

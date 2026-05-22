@@ -1,5 +1,6 @@
 public final class io/opentelemetry/kotlin/OpenTelemetryExtKt {
 	public static final fun getLogger (Lio/opentelemetry/kotlin/OpenTelemetry;Ljava/lang/String;)Lio/opentelemetry/kotlin/logging/Logger;
+	public static final fun getMeter (Lio/opentelemetry/kotlin/OpenTelemetry;Ljava/lang/String;)Lio/opentelemetry/kotlin/metrics/Meter;
 	public static final fun getTracer (Lio/opentelemetry/kotlin/OpenTelemetry;Ljava/lang/String;)Lio/opentelemetry/kotlin/tracing/Tracer;
 }
 

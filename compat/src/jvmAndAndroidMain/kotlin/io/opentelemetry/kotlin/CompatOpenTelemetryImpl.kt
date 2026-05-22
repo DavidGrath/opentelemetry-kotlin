@@ -9,12 +9,14 @@ import io.opentelemetry.kotlin.factory.SpanFactory
 import io.opentelemetry.kotlin.factory.TraceFlagsFactory
 import io.opentelemetry.kotlin.factory.TraceStateFactory
 import io.opentelemetry.kotlin.logging.LoggerProvider
+import io.opentelemetry.kotlin.metrics.MeterProvider
 import io.opentelemetry.kotlin.propagation.TextMapPropagator
 import io.opentelemetry.kotlin.tracing.TracerProvider
 
 internal class CompatOpenTelemetryImpl(
     override val tracerProvider: TracerProvider,
     override val loggerProvider: LoggerProvider,
+    override val meterProvider: MeterProvider,
     override val clock: Clock,
     override val spanContext: SpanContextFactory,
     override val traceFlags: TraceFlagsFactory,

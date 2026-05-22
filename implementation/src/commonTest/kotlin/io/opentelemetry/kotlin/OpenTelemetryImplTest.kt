@@ -16,6 +16,7 @@ import io.opentelemetry.kotlin.factory.FakeTraceFlagsFactory
 import io.opentelemetry.kotlin.factory.FakeTraceStateFactory
 import io.opentelemetry.kotlin.logging.FakeLoggerProvider
 import io.opentelemetry.kotlin.logging.LoggerProvider
+import io.opentelemetry.kotlin.metrics.FakeMeterProvider
 import io.opentelemetry.kotlin.tracing.FakeTracerProvider
 import io.opentelemetry.kotlin.tracing.TracerProvider
 import kotlinx.coroutines.delay
@@ -199,6 +200,7 @@ internal class OpenTelemetryImplTest {
     ): TelemetryCloseable = OpenTelemetryImpl(
         tracerProvider = tracerProvider,
         loggerProvider = loggerProvider,
+        meterProvider = FakeMeterProvider(),
         clock = FakeClock(),
         spanContext = FakeSpanContextFactory(),
         traceFlags = FakeTraceFlagsFactory(),
