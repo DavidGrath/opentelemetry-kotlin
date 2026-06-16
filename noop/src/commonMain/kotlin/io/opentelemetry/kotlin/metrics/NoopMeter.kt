@@ -40,4 +40,12 @@ internal object NoopMeter : Meter {
     ): DoubleCounter {
         return NoopDoubleCounter
     }
+
+    override fun createGenericDoubleCounter(
+        name: String,
+        description: String?,
+        unit: String?
+    ): GenericCounter<Double> {
+        return NoopGenericDoubleCounter
+    }
 }

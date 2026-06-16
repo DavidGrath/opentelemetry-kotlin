@@ -26,6 +26,7 @@ internal class FloatCounterAdapterTest {
     @Test
     fun nonNullNameAndDescriptionTest() {
         adapter = FloatCounterAdapter("test_counter", "units", "This is a test counter", meterProvider.get("test-scope"))
+
         assertNotNull(adapter.getUnit())
         assertNotNull(adapter.getDescription())
     }

@@ -5,7 +5,7 @@ import io.opentelemetry.kotlin.aliases.OtelJavaMeter
 
 @ExperimentalApi
 internal class MeterAdapter(
-    @Suppress("UnusedPrivateProperty") private val impl: OtelJavaMeter,
+    private val impl: OtelJavaMeter,
 ) : Meter {
     override fun createIntegerCounter(
         name: String,
@@ -38,4 +38,25 @@ internal class MeterAdapter(
     ): DoubleCounter {
         return DoubleCounterAdapter(name, description, unit, impl)
     }
+
+    override fun createGenericDoubleCounter(
+        name: String,
+        description: String?,
+        unit: String?
+    ): GenericCounter<Double> {
+        return GenericDoubleCounterAdapter(name, description, unit, impl)
+    }
+
+    /**
+     * Needs a type token or `inline` for `reified`. Seems to not be much better than `createGenericDoubleCounter`
+     * above
+     */
+//    override fun <T : Number> createGenericCounter(
+//        name: String,
+//        description: String?,
+//        unit: String?
+//    ): GenericCounter<T> {
+//
+//
+//    }
 }

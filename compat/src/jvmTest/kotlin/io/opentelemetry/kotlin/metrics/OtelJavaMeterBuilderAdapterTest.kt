@@ -110,6 +110,14 @@ internal class OtelJavaMeterBuilderAdapterTest {
                 ): DoubleCounter {
                     return NoopTestDoubleCounter
                 }
+
+                override fun createGenericDoubleCounter(
+                    name: String,
+                    description: String?,
+                    unit: String?
+                ): GenericCounter<Double> {
+                    return NoopTestGenericDoubleCounter
+                }
             }
         }
     }

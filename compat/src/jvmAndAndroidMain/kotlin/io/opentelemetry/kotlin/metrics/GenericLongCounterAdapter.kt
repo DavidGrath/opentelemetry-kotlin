@@ -1,15 +1,17 @@
 package io.opentelemetry.kotlin.metrics
 
+import io.opentelemetry.kotlin.aliases.OtelJavaDoubleCounter
 import io.opentelemetry.kotlin.aliases.OtelJavaLongCounter
 import io.opentelemetry.kotlin.aliases.OtelJavaMeter
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.attributes.CompatAttributesModel
 
-internal class LongCounterAdapter(
-    private val counterName: String, private val unit: String?,
+internal class GenericLongCounterAdapter(
+    private val nameValue: String,
+    private val unit: String?,
     private val description: String?,
     meter: OtelJavaMeter
-): LongCounter {
+): GenericCounter<Long> {
 
     private val counter: OtelJavaLongCounter
 
@@ -25,7 +27,7 @@ internal class LongCounterAdapter(
     }
 
     override val name: String
-        get() = counterName
+        get() = nameValue
 
     override fun getUnit(): String? {
         return unit
@@ -48,5 +50,7 @@ internal class LongCounterAdapter(
         if (attributes != null) {
             attributes(model)
         }
+
     }
+
 }

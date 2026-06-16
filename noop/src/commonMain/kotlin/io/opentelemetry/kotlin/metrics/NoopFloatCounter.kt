@@ -3,9 +3,9 @@ package io.opentelemetry.kotlin.metrics
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 
 internal object NoopFloatCounter: FloatCounter {
-    override fun getName(): String {
-        return "noop"
-    }
+
+    override val name: String
+        get() = "noop"
 
     override fun getUnit(): String? {
         return null

@@ -51,4 +51,22 @@ public interface Meter {
      * * Consists of alphabets, numbers, and the following: '_', '.', '-', '/'
      */
     public fun createDoubleCounter(name: String, description: String? = null, unit: String? = null): DoubleCounter
+
+    /**
+     * @param name
+     * * Must not be empty
+     * * Maximum length of 255 characters
+     * * Must start with an alphabetic character
+     * * Consists of alphabets, numbers, and the following: '_', '.', '-', '/'
+     */
+    public fun createGenericDoubleCounter(name: String, description: String? = null, unit: String? = null): GenericCounter<Double>
+
+    /**
+     * @param name
+     * * Must not be empty
+     * * Maximum length of 255 characters
+     * * Must start with an alphabetic character
+     * * Consists of alphabets, numbers, and the following: '_', '.', '-', '/'
+     */
+//    public fun <T: Number> createGenericCounter(name: String, description: String? = null, unit: String? = null): GenericCounter<T>
 }

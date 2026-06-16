@@ -2,10 +2,9 @@ package io.opentelemetry.kotlin.metrics
 
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 
-internal object NoopIntegerCounter: IntegerCounter {
+internal object NoopGenericDoubleCounter: GenericCounter<Double> {
 
-    override val name: String
-        get() = "noop"
+    override val name: String = "noop"
 
     override fun getUnit(): String? {
         return null
@@ -20,7 +19,7 @@ internal object NoopIntegerCounter: IntegerCounter {
     }
 
     override fun add(
-        value: UInt,
+        value: Double,
         attributes: (AttributesMutator.() -> Unit)?
     ) {
 

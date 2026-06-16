@@ -6,7 +6,7 @@ import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.attributes.CompatAttributesModel
 
 internal class FloatCounterAdapter(
-    private val name: String, private val unit: String?,
+    private val counterName: String, private val unit: String?,
     private val description: String?,
     meter: OtelJavaMeter
 ): FloatCounter {
@@ -24,9 +24,9 @@ internal class FloatCounterAdapter(
         }
         counter = builder.build()
     }
-    override fun getName(): String {
-        return name
-    }
+
+    override val name: String
+        get() = counterName
 
     override fun getUnit(): String? {
         return unit

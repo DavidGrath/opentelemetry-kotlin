@@ -3,9 +3,8 @@ package io.opentelemetry.kotlin.metrics
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 
 internal object NoopDoubleCounter: DoubleCounter {
-    override fun getName(): String {
-        return "noop"
-    }
+
+    override val name: String = "noop"
 
     override fun getUnit(): String? {
         return null

@@ -6,7 +6,8 @@ import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.attributes.CompatAttributesModel
 
 internal class DoubleCounterAdapter(
-    private val name: String, private val unit: String?,
+    private val nameValue: String,
+    private val unit: String?,
     private val description: String?,
     meter: OtelJavaMeter
 ): DoubleCounter {
@@ -23,9 +24,9 @@ internal class DoubleCounterAdapter(
         }
         counter = builder.build()
     }
-    override fun getName(): String {
-        return name
-    }
+
+    override val name: String
+        get() = nameValue
 
     override fun getUnit(): String? {
         return unit

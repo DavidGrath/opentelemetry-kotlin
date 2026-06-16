@@ -5,13 +5,10 @@ import io.opentelemetry.kotlin.attributes.AttributesMutator
 
 
 @OptIn(ExperimentalApi::class)
-public interface DoubleCounter {
+public interface DoubleCounter: Instrument {
 
-    public fun getName(): String
-
-    public fun getUnit(): String?
-    public fun getDescription(): String?
-    public fun isEnabled(): Boolean
+    override val kind: String
+        get() = "synchronous-counter"
 
     /**
      * @param value Must be non-negative

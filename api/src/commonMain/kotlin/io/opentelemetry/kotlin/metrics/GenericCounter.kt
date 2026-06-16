@@ -3,10 +3,8 @@ package io.opentelemetry.kotlin.metrics
 import io.opentelemetry.kotlin.ExperimentalApi
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 
-
 @OptIn(ExperimentalApi::class)
-public interface IntegerCounter: Instrument {
-
+public interface GenericCounter<in NumericType: Number>: Instrument {
 
     override val kind: String
         get() = "synchronous-counter"
@@ -14,6 +12,5 @@ public interface IntegerCounter: Instrument {
     /**
      * @param value Must be non-negative
      */
-    public fun add(value: UInt, attributes: (AttributesMutator.() -> Unit)? = null)
-
+    public fun add(value: NumericType, attributes: (AttributesMutator.() -> Unit)? = null)
 }
