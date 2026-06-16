@@ -51,6 +51,7 @@ internal fun createCompatOpenTelemetryImpl(
     return CompatOpenTelemetryImpl(
         tracerProvider = cfg.tracerProviderConfig.build(clock, base, cfg.globalAttributeLimits),
         loggerProvider = cfg.loggerProviderConfig.build(clock, base, cfg.globalAttributeLimits),
+        meterProvider = cfg.meterProviderConfig.build(clock, base),
         clock = clock,
         spanContext = spanContext,
         traceFlags = traceFlags,

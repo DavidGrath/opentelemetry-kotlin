@@ -21,6 +21,7 @@ internal class CompatOpenTelemetryConfig(
 
     internal val tracerProviderConfig = CompatTracerProviderConfig(clock, idGenerator)
     internal val loggerProviderConfig = CompatLoggerProviderConfig(clock)
+    internal val meterProviderConfig = CompatMeterProviderConfig(clock)
     internal val globalAttributeLimits = CompatAttributeLimitsConfig()
     internal val propagatorCfg = CompatPropagatorConfigImpl()
 
@@ -61,6 +62,10 @@ internal class CompatOpenTelemetryConfig(
 
     override fun loggerProvider(action: LoggerProviderConfigDsl.() -> Unit) {
         loggerProviderConfig.action()
+    }
+
+    override fun meterProvider(action: MeterProviderConfigDsl.() -> Unit) {
+        meterProviderConfig.action()
     }
 
     override fun propagator(action: PropagatorConfigDsl.() -> TextMapPropagator) {

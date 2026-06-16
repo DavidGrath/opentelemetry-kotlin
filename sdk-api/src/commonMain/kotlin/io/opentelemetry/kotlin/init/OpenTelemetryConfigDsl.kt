@@ -27,6 +27,11 @@ public interface OpenTelemetryConfigDsl : ResourceConfigDsl {
     public fun loggerProvider(action: LoggerProviderConfigDsl.() -> Unit)
 
     /**
+     * Defines configuration for the [io.opentelemetry.kotlin.metrics.MeterProvider].
+     */
+    public fun meterProvider(action: MeterProviderConfigDsl.() -> Unit)
+
+    /**
      * Defines configuration for how Context behaves.
      */
     public fun context(action: ContextConfigDsl.() -> Unit)

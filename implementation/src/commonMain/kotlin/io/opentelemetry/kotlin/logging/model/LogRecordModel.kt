@@ -2,6 +2,7 @@ package io.opentelemetry.kotlin.logging.model
 
 import io.opentelemetry.kotlin.InstrumentationScopeInfo
 import io.opentelemetry.kotlin.ReentrantReadWriteLock
+import io.opentelemetry.kotlin.attributes.AnyValue
 import io.opentelemetry.kotlin.attributes.AttributesModel
 import io.opentelemetry.kotlin.init.config.LogLimitConfig
 import io.opentelemetry.kotlin.logging.SeverityNumber
@@ -21,7 +22,7 @@ internal class LogRecordModel(
     eventName: String?,
     severityText: String?,
     severityNumber: SeverityNumber?,
-    override val spanContext: SpanContext,
+    spanContext: SpanContext,
     logLimitConfig: LogLimitConfig,
 ) : ReadWriteLogRecord {
 
@@ -70,6 +71,16 @@ internal class LogRecordModel(
         }
 
     override var body: Any? = body
+        get() = lock.read {
+            field
+        }
+        set(value) {
+            lock.write {
+                field = value
+            }
+        }
+
+    override var spanContext: SpanContext = spanContext
         get() = lock.read {
             field
         }
@@ -165,6 +176,12 @@ internal class LogRecordModel(
     override fun setByteArrayAttribute(key: String, value: ByteArray) {
         lock.write {
             attrs.setByteArrayAttribute(key, value)
+        }
+    }
+
+    override fun setAnyValueAttribute(key: String, value: AnyValue) {
+        lock.write {
+            attrs.setAnyValueAttribute(key, value)
         }
     }
 }

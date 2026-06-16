@@ -1,6 +1,7 @@
 package io.opentelemetry.kotlin
 
 import io.opentelemetry.kotlin.logging.Logger
+import io.opentelemetry.kotlin.metrics.Meter
 import io.opentelemetry.kotlin.tracing.Tracer
 
 /**
@@ -21,4 +22,14 @@ public fun OpenTelemetry.getTracer(instrumentationScopeName: String): Tracer {
 @ThreadSafe
 public fun OpenTelemetry.getLogger(instrumentationScopeName: String): Logger {
     return loggerProvider.getLogger(name = instrumentationScopeName)
+}
+
+/**
+ * Returns a [Meter] for the given [instrumentationScopeName]. This is equivalent to calling
+ * [io.opentelemetry.kotlin.metrics.MeterProvider.getMeter].
+ */
+@ExperimentalApi
+@ThreadSafe
+public fun OpenTelemetry.getMeter(instrumentationScopeName: String): Meter {
+    return meterProvider.getMeter(name = instrumentationScopeName)
 }

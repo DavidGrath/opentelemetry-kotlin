@@ -5,6 +5,7 @@ public abstract interface class io/opentelemetry/kotlin/OpenTelemetry {
 	public abstract fun getBaggage ()Lio/opentelemetry/kotlin/factory/BaggageFactory;
 	public abstract fun getContext ()Lio/opentelemetry/kotlin/factory/ContextFactory;
 	public abstract fun getLoggerProvider ()Lio/opentelemetry/kotlin/logging/LoggerProvider;
+	public abstract fun getMeterProvider ()Lio/opentelemetry/kotlin/metrics/MeterProvider;
 	public abstract fun getPropagator ()Lio/opentelemetry/kotlin/propagation/TextMapPropagator;
 	public abstract fun getSpan ()Lio/opentelemetry/kotlin/factory/SpanFactory;
 	public abstract fun getSpanContext ()Lio/opentelemetry/kotlin/factory/SpanContextFactory;
@@ -81,6 +82,7 @@ public final class io/opentelemetry/kotlin/attributes/AnyValue$StringValue : io/
 }
 
 public abstract interface class io/opentelemetry/kotlin/attributes/AttributesMutator {
+	public abstract fun setAnyValueAttribute (Ljava/lang/String;Lio/opentelemetry/kotlin/attributes/AnyValue;)V
 	public abstract fun setBooleanAttribute (Ljava/lang/String;Z)V
 	public abstract fun setBooleanListAttribute (Ljava/lang/String;Ljava/util/List;)V
 	public abstract fun setByteArrayAttribute (Ljava/lang/String;[B)V
@@ -116,6 +118,24 @@ public abstract interface class io/opentelemetry/kotlin/baggage/BaggageEntry {
 
 public abstract interface class io/opentelemetry/kotlin/baggage/BaggageEntryMetadata {
 	public abstract fun getValue ()Ljava/lang/String;
+}
+
+public abstract interface class io/opentelemetry/kotlin/config/ConfigProperties {
+	public abstract fun getBoolean (Ljava/lang/String;)Ljava/lang/Boolean;
+	public abstract fun getBooleanList (Ljava/lang/String;)Ljava/util/List;
+	public abstract fun getDouble (Ljava/lang/String;)Ljava/lang/Double;
+	public abstract fun getDoubleList (Ljava/lang/String;)Ljava/util/List;
+	public abstract fun getLong (Ljava/lang/String;)Ljava/lang/Long;
+	public abstract fun getLongList (Ljava/lang/String;)Ljava/util/List;
+	public abstract fun getPropertyKeys ()Ljava/util/Set;
+	public abstract fun getString (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun getStringList (Ljava/lang/String;)Ljava/util/List;
+	public abstract fun getStructured (Ljava/lang/String;)Lio/opentelemetry/kotlin/config/ConfigProperties;
+	public abstract fun getStructuredList (Ljava/lang/String;)Ljava/util/List;
+}
+
+public abstract interface class io/opentelemetry/kotlin/config/ConfigProvider {
+	public abstract fun getInstrumentationConfig ()Lio/opentelemetry/kotlin/config/ConfigProperties;
 }
 
 public abstract interface class io/opentelemetry/kotlin/context/Context {

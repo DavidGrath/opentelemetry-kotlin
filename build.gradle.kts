@@ -10,17 +10,24 @@ plugins {
 
 plugins.withType<YarnPlugin> {
     extensions.configure<YarnRootExtension> {
-        resolution("brace-expansion", ">=5.0.5")
+        resolution("brace-expansion", ">=5.0.6")
         resolution("diff", ">=8.0.3")
         resolution("glob", ">=10.5.0")
         resolution("js-yaml", ">=4.1.1")
         resolution("minimatch", ">=9.0.7")
         resolution("serialize-javascript", ">=7.0.5")
+        resolution("ws", "~8.20.1")
     }
 }
 
 group = "io.opentelemetry.kotlin"
 version = project.version
+
+if (project.hasProperty("snapshotPublish")) {
+    allprojects {
+        version = "${version}-SNAPSHOT"
+    }
+}
 
 kover {
     merge {

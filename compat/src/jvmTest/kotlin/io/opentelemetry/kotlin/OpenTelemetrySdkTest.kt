@@ -53,4 +53,17 @@ internal class OpenTelemetrySdkTest {
         assertNotSame(b, c)
         assertNotSame(c, d)
     }
+
+    @Test
+    fun `retrieve meter provider`() {
+        val sdk = createCompatOpenTelemetry()
+        val provider = sdk.meterProvider
+        val a = provider.getMeter("test")
+        val b = provider.getMeter("test")
+        val c = provider.getMeter("test", "1.0.0")
+        val d = provider.getMeter("another")
+        assertSame(a, b)
+        assertNotSame(b, c)
+        assertNotSame(c, d)
+    }
 }

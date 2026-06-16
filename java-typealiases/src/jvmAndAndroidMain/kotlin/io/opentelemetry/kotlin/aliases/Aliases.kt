@@ -49,6 +49,7 @@ import io.opentelemetry.sdk.common.Clock
 import io.opentelemetry.sdk.common.CompletableResultCode
 import io.opentelemetry.sdk.common.InstrumentationLibraryInfo
 import io.opentelemetry.sdk.common.InstrumentationScopeInfo
+import io.opentelemetry.sdk.extension.incubator.trace.samplers.AlwaysRecordSampler
 import io.opentelemetry.sdk.logs.LogLimits
 import io.opentelemetry.sdk.logs.LogRecordProcessor
 import io.opentelemetry.sdk.logs.ReadWriteLogRecord
@@ -151,3 +152,4 @@ typealias OtelJavaLongCounter = LongCounter
 typealias OtelJavaLongCounterBuilder = LongCounterBuilder
 typealias OtelJavaDoubleCounter = DoubleCounter
 typealias OtelJavaDoubleCounterBuilder = DoubleCounterBuilder
+typealias OtelJavaAlwaysRecordSampler = AlwaysRecordSampler

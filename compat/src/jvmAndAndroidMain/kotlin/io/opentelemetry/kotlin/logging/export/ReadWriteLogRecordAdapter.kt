@@ -3,7 +3,9 @@ package io.opentelemetry.kotlin.logging.export
 import io.opentelemetry.kotlin.InstrumentationScopeInfo
 import io.opentelemetry.kotlin.aliases.OtelJavaAttributeKey
 import io.opentelemetry.kotlin.aliases.OtelJavaReadWriteLogRecord
+import io.opentelemetry.kotlin.attributes.AnyValue
 import io.opentelemetry.kotlin.attributes.convertToMap
+import io.opentelemetry.kotlin.attributes.setFlattenedAnyValueAttribute
 import io.opentelemetry.kotlin.logging.SeverityNumber
 import io.opentelemetry.kotlin.logging.model.ReadWriteLogRecord
 import io.opentelemetry.kotlin.logging.toOtelKotlinSeverityNumber
@@ -39,6 +41,11 @@ internal class ReadWriteLogRecordAdapter(
 
     override var body: Any?
         get() = impl.bodyValue?.asString()
+        set(value) {
+        }
+
+    override var spanContext: SpanContext
+        get() = SpanContextAdapter(impl.spanContext)
         set(value) {
         }
 
@@ -83,11 +90,12 @@ internal class ReadWriteLogRecordAdapter(
         // no java implementation available
     }
 
+    override fun setAnyValueAttribute(key: String, value: AnyValue) {
+        setFlattenedAnyValueAttribute(key, value)
+    }
+
     override val attributes: Map<String, Any>
         get() = impl.attributes.convertToMap()
-
-    override val spanContext: SpanContext
-        get() = SpanContextAdapter(impl.spanContext)
 
     override val resource: Resource
         get() = ResourceAdapter(impl.toLogRecordData().resource)

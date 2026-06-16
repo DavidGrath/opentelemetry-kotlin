@@ -12,6 +12,7 @@ import io.opentelemetry.kotlin.factory.TraceStateFactoryImpl
 import io.opentelemetry.kotlin.init.OpenTelemetryConfigDsl
 import io.opentelemetry.kotlin.init.OpenTelemetryConfigImpl
 import io.opentelemetry.kotlin.logging.LoggerProviderImpl
+import io.opentelemetry.kotlin.metrics.MeterProviderImpl
 import io.opentelemetry.kotlin.tracing.TracerProviderImpl
 
 /**
@@ -60,6 +61,7 @@ internal fun createOpenTelemetryImpl(
 
     val tracingConfig = cfg.generateTracingConfig()
     val loggingConfig = cfg.generateLoggingConfig()
+    val metricsConfig = cfg.generateMetricsConfig()
     return OpenTelemetryImpl(
         tracerProvider = TracerProviderImpl(
             clock = clock,
@@ -75,6 +77,9 @@ internal fun createOpenTelemetryImpl(
             loggingConfig = loggingConfig,
             contextFactory = contextFactory,
             spanContextFactory = spanContext,
+        ),
+        meterProvider = MeterProviderImpl(
+            metricsConfig = metricsConfig,
         ),
         clock = clock,
         spanContext = spanContext,

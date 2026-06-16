@@ -2,6 +2,7 @@ package io.opentelemetry.kotlin
 
 import io.opentelemetry.kotlin.aliases.OtelJavaOpenTelemetry
 import io.opentelemetry.kotlin.logging.OtelJavaLoggerProviderAdapter
+import io.opentelemetry.kotlin.metrics.OtelJavaMeterProviderAdapter
 import io.opentelemetry.kotlin.tracing.OtelJavaTracerProviderAdapter
 
 /**
@@ -18,6 +19,7 @@ public fun OpenTelemetry.toOtelJavaApi(): OtelJavaOpenTelemetry {
     }
     return OtelJavaOpenTelemetrySdk(
         OtelJavaTracerProviderAdapter(tracerProvider),
-        OtelJavaLoggerProviderAdapter(loggerProvider)
+        OtelJavaLoggerProviderAdapter(loggerProvider),
+        OtelJavaMeterProviderAdapter(meterProvider),
     )
 }

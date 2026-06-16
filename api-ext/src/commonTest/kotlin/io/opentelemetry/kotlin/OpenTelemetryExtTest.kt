@@ -22,4 +22,13 @@ internal class OpenTelemetryExtTest {
         val observed = otel.getLogger(name)
         assertSame(expected, observed)
     }
+
+    @Test
+    fun testGetMeter() {
+        val otel = FakeOpenTelemetry()
+        val name = "my_meter"
+        val expected = otel.meterProvider.getMeter(name)
+        val observed = otel.getMeter(name)
+        assertSame(expected, observed)
+    }
 }
