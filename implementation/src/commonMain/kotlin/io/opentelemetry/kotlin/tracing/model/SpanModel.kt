@@ -13,7 +13,6 @@ import io.opentelemetry.kotlin.tracing.SpanCreationAction
 import io.opentelemetry.kotlin.tracing.SpanDataImpl
 import io.opentelemetry.kotlin.tracing.SpanEventImpl
 import io.opentelemetry.kotlin.tracing.SpanKind
-import io.opentelemetry.kotlin.tracing.SpanLinkImpl
 import io.opentelemetry.kotlin.tracing.StatusData
 import io.opentelemetry.kotlin.tracing.data.SpanData
 import io.opentelemetry.kotlin.tracing.data.SpanEventData
@@ -34,7 +33,8 @@ internal class SpanModel(
     override val resource: Resource,
     override val parent: SpanContext,
     spanContext: SpanContext,
-    private val spanLimitConfig: SpanLimitConfig
+    private val spanLimitConfig: SpanLimitConfig,
+    initialLinks: List<SpanLink>
 ) : ReadWriteSpan, SpanCreationAction {
 
     private enum class State {
@@ -113,7 +113,7 @@ internal class SpanModel(
             eventsList.toList()
         }
 
-    private val linksList = mutableListOf<SpanLinkData>()
+    private val linksList = initialLinks.toMutableList<SpanLinkData>()
 
     override val links: List<SpanLinkData>
         get() = lock.read {
@@ -126,14 +126,7 @@ internal class SpanModel(
     ) {
         lock.write {
             if (isRecording() && linksList.size < spanLimitConfig.linkCountLimit && !hasSpanContext(spanContext)) {
-                val container = AttributesModel(
-                    attributeLimit = spanLimitConfig.attributeCountPerLinkLimit,
-                    attributeValueLengthLimit = spanLimitConfig.attributeValueLengthLimit
-                )
-                if (attributes != null) {
-                    attributes(container)
-                }
-                val link = SpanLinkImpl(spanContext, container)
+                val link = buildSpanLink(spanContext, attributes, spanLimitConfig)
                 linksList.add(link)
             }
         }
