@@ -29,6 +29,13 @@ internal class SpanCreationCollector(
     val links: List<SpanLink> get() = linksList.toList()
     val droppedLinksCount: Int get() = droppedLinksCountImpl
 
+    /**
+     * The number of creation-time attributes dropped here because the span's attribute limit was
+     * exceeded. Only kept attributes are transferred to the span, so this count would otherwise be
+     * lost and must be forwarded to the span (see [SpanModel]).
+     */
+    val droppedAttributesCount: Int get() = attrs.droppedAttributesCount
+
     override fun addLink(
         spanContext: SpanContext,
         attributes: (AttributesMutator.() -> Unit)?,

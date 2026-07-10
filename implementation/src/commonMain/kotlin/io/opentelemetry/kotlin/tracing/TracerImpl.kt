@@ -94,6 +94,7 @@ internal class TracerImpl(
                 spanContext = spanContext,
                 spanLimitConfig = spanLimitConfig,
                 initialLinks = collector.links,
+                initialDroppedAttributesCount = collector.droppedAttributesCount,
                 initialDroppedLinksCount = collector.droppedLinksCount
             )
             spanModel.setAttributes(result.attributes)

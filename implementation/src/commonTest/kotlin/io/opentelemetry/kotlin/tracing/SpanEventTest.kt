@@ -126,6 +126,7 @@ internal class SpanEventTest {
         }
         val event = (span.toReadableSpan()).events.single()
         assertEquals(fakeSpanLimitsConfig.attributeCountLimit, event.attributes.size)
+        assertEquals(1, event.droppedAttributesCount)
     }
 
     @Test
@@ -139,6 +140,7 @@ internal class SpanEventTest {
         }
         val event = (span.toReadableSpan()).events.single()
         assertEquals(fakeSpanLimitsConfig.attributeCountLimit, event.attributes.size)
+        assertEquals(1, event.droppedAttributesCount)
     }
 
     private fun retrieveEvents(expected: Int): List<SpanEventData> {

@@ -35,6 +35,7 @@ internal class SpanModel(
     spanContext: SpanContext,
     private val spanLimitConfig: SpanLimitConfig,
     initialLinks: List<SpanLink>,
+    private val initialDroppedAttributesCount: Int = 0,
     initialDroppedLinksCount: Int = 0
 ) : ReadWriteSpan, SpanCreationAction {
 
@@ -190,7 +191,8 @@ internal class SpanModel(
         droppedLinksCount,
         resource,
         instrumentationScopeInfo,
-        hasEnded
+        hasEnded,
+        droppedAttributesCount
     )
 
     override var endTimestamp: Long? = null
@@ -209,6 +211,11 @@ internal class SpanModel(
     override val attributes: Map<String, Any>
         get() = lock.read {
             attrs.attributes
+        }
+
+    override val droppedAttributesCount: Int
+        get() = lock.read {
+            attrs.droppedAttributesCount + initialDroppedAttributesCount
         }
 
     override fun setBooleanAttribute(key: String, value: Boolean) {

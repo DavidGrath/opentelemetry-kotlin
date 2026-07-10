@@ -36,7 +36,8 @@ fun SpanData.toProtobuf() = Span(
     events = events.toSpanEvent(),
     dropped_events_count = droppedEventsCount,
     links = links.toSpanLink(),
-    dropped_links_count = droppedLinksCount
+    dropped_links_count = droppedLinksCount,
+    dropped_attributes_count = droppedAttributesCount
 )
 
 internal fun Span.toSpanData(
@@ -65,7 +66,8 @@ internal fun Span.toSpanData(
     droppedEventsCount = dropped_events_count,
     links = links.map { it.toLinkData() },
     droppedLinksCount = dropped_links_count,
-    hasEnded = true
+    hasEnded = true,
+    droppedAttributesCount = dropped_attributes_count
 )
 
 private fun List<SpanEventData>.toSpanEvent(): List<Span.Event> = map { it.toSpanEvent() }
@@ -73,7 +75,8 @@ private fun List<SpanEventData>.toSpanEvent(): List<Span.Event> = map { it.toSpa
 private fun SpanEventData.toSpanEvent(): Span.Event = Span.Event(
     name = name,
     time_unix_nano = timestamp,
-    attributes = attributes.createKeyValues()
+    attributes = attributes.createKeyValues(),
+    dropped_attributes_count = droppedAttributesCount
 )
 
 private fun List<SpanLinkData>.toSpanLink() = map { it.toLinkData() }
@@ -81,7 +84,8 @@ private fun List<SpanLinkData>.toSpanLink() = map { it.toLinkData() }
 private fun SpanLinkData.toLinkData() = Span.Link(
     trace_id = spanContext.traceIdBytes.toByteString(),
     span_id = spanContext.spanIdBytes.toByteString(),
-    attributes = attributes.createKeyValues()
+    attributes = attributes.createKeyValues(),
+    dropped_attributes_count = droppedAttributesCount
 )
 
 private fun SpanKind.toProtoSpanKind(): Span.SpanKind = when (this) {
@@ -109,7 +113,8 @@ private fun Status.toStatusData(): StatusData = when (code) {
 private fun Span.Event.toEventData(): SpanEventData = DeserializedSpanEventData(
     name = name,
     timestamp = time_unix_nano,
-    attributes = attributes.toAttributeMap()
+    attributes = attributes.toAttributeMap(),
+    droppedAttributesCount = dropped_attributes_count
 )
 
 private fun Span.Link.toLinkData(): SpanLinkData = DeserializedSpanLinkData(
@@ -117,7 +122,8 @@ private fun Span.Link.toLinkData(): SpanLinkData = DeserializedSpanLinkData(
         traceIdBytes = trace_id.toByteArray(),
         spanIdBytes = span_id.toByteArray()
     ),
-    attributes = attributes.toAttributeMap()
+    attributes = attributes.toAttributeMap(),
+    droppedAttributesCount = dropped_attributes_count
 )
 
 private class DeserializedSpanData(
@@ -135,16 +141,19 @@ private class DeserializedSpanData(
     override val droppedEventsCount: Int,
     override val links: List<SpanLinkData>,
     override val droppedLinksCount: Int,
-    override val hasEnded: Boolean
+    override val hasEnded: Boolean,
+    override val droppedAttributesCount: Int
 ) : SpanData
 
 private class DeserializedSpanEventData(
     override val name: String,
     override val timestamp: Long,
-    override val attributes: Map<String, Any>
+    override val attributes: Map<String, Any>,
+    override val droppedAttributesCount: Int
 ) : SpanEventData
 
 private class DeserializedSpanLinkData(
     override val spanContext: SpanContext,
-    override val attributes: Map<String, Any>
+    override val attributes: Map<String, Any>,
+    override val droppedAttributesCount: Int
 ) : SpanLinkData

@@ -100,4 +100,10 @@ public interface SpanData : AttributeContainer {
      */
     @ThreadSafe
     public val hasEnded: Boolean
+
+    /**
+     * The number of attributes that were dropped because the span's attribute limit was exceeded.
+     */
+    @ThreadSafe
+    public val droppedAttributesCount: Int
 }
