@@ -9,6 +9,7 @@ import io.opentelemetry.kotlin.factory.SpanContextFactoryImpl
 import io.opentelemetry.kotlin.factory.SpanFactoryImpl
 import io.opentelemetry.kotlin.factory.TraceFlagsFactoryImpl
 import io.opentelemetry.kotlin.factory.TraceStateFactoryImpl
+import io.opentelemetry.kotlin.init.B3Format
 import io.opentelemetry.kotlin.init.PropagatorConfigImpl
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -97,6 +98,33 @@ internal class CorePropagatorApiTest {
         assertSame(captured, dsl.buildPropagator())
     }
 
+    @Test
+    fun `b3 single returns propagator with b3 field`() {
+        val propagator = dsl.b3(B3Format.SINGLE)
+        installFactories()
+        assertEquals(listOf("b3"), propagator.fields().toList())
+    }
+
+    @Test
+    fun `b3 multi returns propagator with X-B3 fields`() {
+        val propagator = dsl.b3(B3Format.MULTI)
+        installFactories()
+        assertEquals(listOf("X-B3-TraceId", "X-B3-SpanId", "X-B3-Sampled"), propagator.fields().toList())
+    }
+
+    @Test
+    fun `b3 default format is SINGLE`() {
+        val propagator = dsl.b3()
+        installFactories()
+        assertEquals(listOf("b3"), propagator.fields().toList())
+    }
+
+    @Test
+    fun `b3 call captures result and buildPropagator returns it`() {
+        val captured = dsl.b3(B3Format.SINGLE)
+        assertSame(captured, dsl.buildPropagator())
+    }
+
     private fun installFactories() {
         dsl.installFactories(
             traceFlagsFactory = traceFlagsFactory,
@@ -114,12 +142,12 @@ private class RecordingPropagator(private val keys: List<String>) : TextMapPropa
 
     override fun fields(): Collection<String> = keys
 
-    override fun <T> inject(context: Context, carrier: T, setter: TextMapSetter<T>) {
+    override fun <T> inject(context: Context, carrier: T?, setter: TextMapSetter<T>) {
         injectCalled = true
         keys.forEach { k -> setter.set(carrier, k, "set-by-$k") }
     }
 
-    override fun <T> extract(context: Context, carrier: T, getter: TextMapGetter<T>): Context = context
+    override fun <T> extract(context: Context, carrier: T?, getter: TextMapGetter<T>): Context = context
 }
 
 @OptIn(ExperimentalApi::class)
@@ -128,7 +156,7 @@ private class ContextWritingPropagator(
     private val value: String,
 ) : TextMapPropagator {
     override fun fields(): Collection<String> = emptyList()
-    override fun <T> inject(context: Context, carrier: T, setter: TextMapSetter<T>) {}
-    override fun <T> extract(context: Context, carrier: T, getter: TextMapGetter<T>): Context =
+    override fun <T> inject(context: Context, carrier: T?, setter: TextMapSetter<T>) {}
+    override fun <T> extract(context: Context, carrier: T?, getter: TextMapGetter<T>): Context =
         context.set(key, value)
 }

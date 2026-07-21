@@ -61,6 +61,7 @@ abstract class OtelKotlinTestRule(context: TestCoroutineScheduler) {
             )
         }
         logLimits(config.logLimits)
+        config.loggerProvider(this)
     }
 
     /**
@@ -78,6 +79,7 @@ abstract class OtelKotlinTestRule(context: TestCoroutineScheduler) {
             )
         }
         spanLimits(config.spanLimits)
+        config.tracerProvider(this)
     }
 
     /**

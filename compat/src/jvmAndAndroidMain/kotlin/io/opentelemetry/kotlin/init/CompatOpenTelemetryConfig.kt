@@ -6,6 +6,8 @@ import io.opentelemetry.kotlin.aliases.OtelJavaResource
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.attributes.CompatAttributesModel
 import io.opentelemetry.kotlin.attributes.setAttributes
+import io.opentelemetry.kotlin.error.SdkErrorHandler
+import io.opentelemetry.kotlin.factory.CompatIdGenerator
 import io.opentelemetry.kotlin.factory.IdGenerator
 import io.opentelemetry.kotlin.propagation.CompatPropagatorConfigImpl
 import io.opentelemetry.kotlin.propagation.TextMapPropagator
@@ -16,14 +18,16 @@ import io.opentelemetry.kotlin.semconv.ServiceAttributes
 @ExperimentalApi
 internal class CompatOpenTelemetryConfig(
     clock: Clock,
-    idGenerator: IdGenerator,
+    sdkErrorHandler: SdkErrorHandler,
 ) : OpenTelemetryConfigDsl {
 
-    internal val tracerProviderConfig = CompatTracerProviderConfig(clock, idGenerator)
-    internal val loggerProviderConfig = CompatLoggerProviderConfig(clock)
+    internal val tracerProviderConfig = CompatTracerProviderConfig(clock, sdkErrorHandler)
+    internal val loggerProviderConfig = CompatLoggerProviderConfig(clock, sdkErrorHandler)
     internal val meterProviderConfig = CompatMeterProviderConfig(clock)
     internal val globalAttributeLimits = CompatAttributeLimitsConfig()
     internal val propagatorCfg = CompatPropagatorConfigImpl()
+
+    private var customIdGenerator: (() -> IdGenerator)? = null
 
     override fun attributeLimits(action: AttributeLimitsConfigDsl.() -> Unit) {
         globalAttributeLimits.action()
@@ -71,4 +75,10 @@ internal class CompatOpenTelemetryConfig(
     override fun propagator(action: PropagatorConfigDsl.() -> TextMapPropagator) {
         propagatorCfg.action()
     }
+
+    override fun idGenerator(action: () -> IdGenerator) {
+        customIdGenerator = action
+    }
+
+    internal fun resolveIdGenerator(): IdGenerator = customIdGenerator?.invoke() ?: CompatIdGenerator()
 }

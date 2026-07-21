@@ -4,10 +4,13 @@ import io.opentelemetry.kotlin.NoopOpenTelemetry
 import io.opentelemetry.kotlin.attributes.DEFAULT_ATTRIBUTE_LIMIT
 import io.opentelemetry.kotlin.attributes.DEFAULT_ATTRIBUTE_VALUE_LENGTH_LIMIT
 import io.opentelemetry.kotlin.clock.FakeClock
+import io.opentelemetry.kotlin.context.Context
 import io.opentelemetry.kotlin.context.DefaultImplicitContextStorage
 import io.opentelemetry.kotlin.context.FakeContext
 import io.opentelemetry.kotlin.context.FakeImplicitContextStorage
 import io.opentelemetry.kotlin.context.ImplicitContextStorageMode
+import io.opentelemetry.kotlin.error.NoopSdkErrorHandler
+import io.opentelemetry.kotlin.factory.FakeIdGenerator
 import io.opentelemetry.kotlin.logging.export.FakeLogRecordProcessor
 import io.opentelemetry.kotlin.propagation.CompositeTextMapPropagator
 import io.opentelemetry.kotlin.propagation.W3CBaggagePropagator
@@ -26,7 +29,7 @@ internal class OpenTelemetryConfigImplTest {
 
     @Test
     fun testDefaultConfig() {
-        val cfg = OpenTelemetryConfigImpl(clock)
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler)
         assertNull(cfg.generateTracingConfig().processor)
         assertNull(cfg.generateLoggingConfig().processor)
         assertEquals(ImplicitContextStorageMode.GLOBAL, cfg.contextConfig.storageMode)
@@ -35,7 +38,7 @@ internal class OpenTelemetryConfigImplTest {
 
     @Test
     fun testPropagatorOverride() {
-        val cfg = OpenTelemetryConfigImpl(clock).apply {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
             propagator { w3cBaggage() }
         }
         assertSame(W3CBaggagePropagator, cfg.propagatorCfg.buildPropagator())
@@ -43,7 +46,7 @@ internal class OpenTelemetryConfigImplTest {
 
     @Test
     fun testCompositePropagatorOverride() {
-        val cfg = OpenTelemetryConfigImpl(clock).apply {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
             propagator { composite(w3cBaggage()) }
         }
         val composite = cfg.propagatorCfg.buildPropagator()
@@ -53,7 +56,7 @@ internal class OpenTelemetryConfigImplTest {
 
     @Test
     fun testOverrideConfig() {
-        val cfg = OpenTelemetryConfigImpl(clock)
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler)
         cfg.loggerProvider {
             export { FakeLogRecordProcessor() }
         }
@@ -68,8 +71,23 @@ internal class OpenTelemetryConfigImplTest {
     }
 
     @Test
+    fun testIdGeneratorDefault() {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler)
+        assertNotNull(cfg.resolveIdGenerator())
+    }
+
+    @Test
+    fun testIdGeneratorOverride() {
+        val custom = FakeIdGenerator()
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
+            idGenerator { custom }
+        }
+        assertSame(custom, cfg.resolveIdGenerator())
+    }
+
+    @Test
     fun testGlobalAttrLimits() {
-        val cfg = OpenTelemetryConfigImpl(clock).apply {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
             attributeLimits {
                 attributeCountLimit = 64
             }
@@ -80,7 +98,7 @@ internal class OpenTelemetryConfigImplTest {
 
     @Test
     fun testLocalAttrLimits() {
-        val cfg = OpenTelemetryConfigImpl(clock).apply {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
             attributeLimits {
                 attributeCountLimit = 64
             }
@@ -96,7 +114,7 @@ internal class OpenTelemetryConfigImplTest {
 
     @Test
     fun testLocalAttrLimits2() {
-        val cfg = OpenTelemetryConfigImpl(clock).apply {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
             attributeLimits {
                 attributeCountLimit = 64
             }
@@ -115,7 +133,7 @@ internal class OpenTelemetryConfigImplTest {
 
     @Test
     fun testDefaultStorage() {
-        val cfg = OpenTelemetryConfigImpl(clock)
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler)
         val rootContext = FakeContext()
         val storage = cfg.contextConfig.generateStorage { rootContext }
         assertTrue(storage is DefaultImplicitContextStorage)
@@ -123,7 +141,7 @@ internal class OpenTelemetryConfigImplTest {
 
     @Test
     fun testThreadLocalStorage() {
-        val cfg = OpenTelemetryConfigImpl(clock).apply {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
             context {
                 storageMode = ImplicitContextStorageMode.THREAD_LOCAL
             }
@@ -138,7 +156,7 @@ internal class OpenTelemetryConfigImplTest {
     @Test
     fun testCustomStorage() {
         val custom = FakeImplicitContextStorage()
-        val cfg = OpenTelemetryConfigImpl(clock).apply {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
             context {
                 storage { custom }
             }
@@ -149,7 +167,7 @@ internal class OpenTelemetryConfigImplTest {
     @Test
     fun testCustomStorageOverridesStorageMode() {
         val custom = FakeImplicitContextStorage()
-        val cfg = OpenTelemetryConfigImpl(clock).apply {
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
             context {
                 storageMode = ImplicitContextStorageMode.GLOBAL
                 storage { custom }
@@ -159,8 +177,25 @@ internal class OpenTelemetryConfigImplTest {
     }
 
     @Test
+    fun testCustomStorageReceivesRootSupplier() {
+        val root = FakeContext()
+        var captured: (() -> Context)? = null
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler).apply {
+            context {
+                storage { rootSupplier ->
+                    captured = rootSupplier
+                    DefaultImplicitContextStorage(rootSupplier)
+                }
+            }
+        }
+        val storage = cfg.contextConfig.generateStorage { root }
+        assertSame(root, captured?.invoke())
+        assertSame(root, storage.implicitContext())
+    }
+
+    @Test
     fun testDefaultAttrLimits() {
-        val cfg = OpenTelemetryConfigImpl(clock)
+        val cfg = OpenTelemetryConfigImpl(clock, NoopSdkErrorHandler)
         with(cfg.generateTracingConfig().spanLimits) {
             assertEquals(DEFAULT_ATTRIBUTE_LIMIT, attributeCountLimit)
             assertEquals(DEFAULT_ATTRIBUTE_VALUE_LENGTH_LIMIT, attributeValueLengthLimit)

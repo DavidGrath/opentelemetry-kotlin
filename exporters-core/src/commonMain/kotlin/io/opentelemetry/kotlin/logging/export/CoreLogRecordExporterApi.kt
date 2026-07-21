@@ -2,8 +2,8 @@
 package io.opentelemetry.kotlin.logging.export
 
 import io.opentelemetry.kotlin.ExperimentalApi
-import io.opentelemetry.kotlin.error.NoopSdkErrorHandler
 import io.opentelemetry.kotlin.export.BatchTelemetryDefaults
+import io.opentelemetry.kotlin.export.telemetryExceptionHandler
 import io.opentelemetry.kotlin.init.LogExportConfigDsl
 import io.opentelemetry.kotlin.platformLog
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,7 +20,7 @@ public fun LogExportConfigDsl.compositeLogRecordProcessor(vararg processors: Log
         platformLog("At least one processor must be provided")
         return NoopLogRecordProcessor
     }
-    return CompositeLogRecordProcessor(processors.toList(), NoopSdkErrorHandler)
+    return CompositeLogRecordProcessor(processors.toList(), sdkErrorHandler)
 }
 
 /**
@@ -29,7 +29,9 @@ public fun LogExportConfigDsl.compositeLogRecordProcessor(vararg processors: Log
 @ExperimentalApi
 public fun LogExportConfigDsl.simpleLogRecordProcessor(exporter: LogRecordExporter): LogRecordProcessor {
     val dispatcher: CoroutineDispatcher = Dispatchers.Default
-    val scope = CoroutineScope(SupervisorJob() + dispatcher)
+    val scope = CoroutineScope(
+        SupervisorJob() + dispatcher + telemetryExceptionHandler("Simple log record processor")
+    )
     return SimpleLogRecordProcessor(exporter, scope)
 }
 
@@ -42,7 +44,7 @@ public fun LogExportConfigDsl.compositeLogRecordExporter(vararg exporters: LogRe
         platformLog("At least one exporter must be provided")
         return NoopLogRecordExporter
     }
-    return CompositeLogRecordExporter(exporters.toList(), NoopSdkErrorHandler)
+    return CompositeLogRecordExporter(exporters.toList(), sdkErrorHandler)
 }
 
 /**
@@ -53,7 +55,7 @@ public fun LogExportConfigDsl.compositeLogRecordExporter(vararg exporters: LogRe
 public fun LogExportConfigDsl.batchLogRecordProcessor(
     exporter: LogRecordExporter,
     maxQueueSize: Int = BatchTelemetryDefaults.MAX_QUEUE_SIZE,
-    scheduleDelayMs: Long = BatchTelemetryDefaults.SCHEDULE_DELAY_MS,
+    scheduleDelayMs: Long = BatchTelemetryDefaults.LOG_SCHEDULE_DELAY_MS,
     exportTimeoutMs: Long = BatchTelemetryDefaults.EXPORT_TIMEOUT_MS,
     maxExportBatchSize: Int = BatchTelemetryDefaults.MAX_EXPORT_BATCH_SIZE,
     dispatcher: CoroutineDispatcher = Dispatchers.Default,
@@ -63,6 +65,7 @@ public fun LogExportConfigDsl.batchLogRecordProcessor(
     scheduleDelayMs,
     exportTimeoutMs,
     maxExportBatchSize,
+    sdkErrorHandler,
     dispatcher,
 )
 

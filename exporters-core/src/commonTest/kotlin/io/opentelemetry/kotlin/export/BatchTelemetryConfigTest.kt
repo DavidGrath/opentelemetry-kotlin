@@ -1,6 +1,7 @@
 package io.opentelemetry.kotlin.export
 
 import io.opentelemetry.kotlin.error.FakeSdkErrorHandler
+import io.opentelemetry.kotlin.error.NoopSdkErrorHandler
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -8,9 +9,9 @@ internal class BatchTelemetryConfigTest {
 
     @Test
     fun testDefaults() {
-        val cfg = BatchTelemetryConfig()
+        val cfg = BatchTelemetryConfig(sdkErrorHandler = NoopSdkErrorHandler)
         assertEquals(BatchTelemetryDefaults.MAX_QUEUE_SIZE, cfg.maxQueueSize)
-        assertEquals(BatchTelemetryDefaults.SCHEDULE_DELAY_MS, cfg.scheduleDelayMs)
+        assertEquals(BatchTelemetryDefaults.SPAN_SCHEDULE_DELAY_MS, cfg.scheduleDelayMs)
         assertEquals(BatchTelemetryDefaults.EXPORT_TIMEOUT_MS, cfg.exportTimeoutMs)
         assertEquals(BatchTelemetryDefaults.MAX_EXPORT_BATCH_SIZE, cfg.maxExportBatchSize)
         assertEquals(BatchTelemetryDefaults.FORCE_FLUSH_TIMEOUT_MS, cfg.forceFlushTimeoutMs)
@@ -28,7 +29,7 @@ internal class BatchTelemetryConfigTest {
             sdkErrorHandler = handler,
         )
         assertEquals(5, handler.apiMisuses.size)
-        val default = BatchTelemetryConfig()
+        val default = BatchTelemetryConfig(sdkErrorHandler = NoopSdkErrorHandler)
         assertEquals(default.maxQueueSize, cfg.maxQueueSize)
         assertEquals(default.scheduleDelayMs, cfg.scheduleDelayMs)
         assertEquals(default.exportTimeoutMs, cfg.exportTimeoutMs)

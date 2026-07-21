@@ -12,13 +12,14 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeout
 
 internal class BatchTelemetryProcessor<T>(
-    private val config: BatchTelemetryConfig = BatchTelemetryConfig(),
+    private val config: BatchTelemetryConfig,
     dispatcher: CoroutineDispatcher = Dispatchers.Default,
     private val exportAction: suspend (telemetry: List<T>) -> OperationResultCode,
 ) : TelemetryCloseable {
 
     private val shutdownState: MutableShutdownState = MutableShutdownState()
-    private val scope = CoroutineScope(SupervisorJob() + dispatcher)
+    private val scope =
+        CoroutineScope(SupervisorJob() + dispatcher + telemetryExceptionHandler("Batch processor"))
     private val mutex = Mutex()
     private val queue = mutableListOf<T>()
 

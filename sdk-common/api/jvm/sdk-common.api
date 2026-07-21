@@ -19,7 +19,6 @@ public final class io/opentelemetry/kotlin/export/CompositeTelemetryCloseable : 
 	public static final field FORCE_FLUSH_TIMEOUT_MS J
 	public static final field SHUTDOWN_TIMEOUT_MS J
 	public fun <init> (Ljava/util/List;Lio/opentelemetry/kotlin/error/SdkErrorHandler;)V
-	public synthetic fun <init> (Ljava/util/List;Lio/opentelemetry/kotlin/error/SdkErrorHandler;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun forceFlush (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun shutdown (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -43,6 +42,10 @@ public abstract class io/opentelemetry/kotlin/export/ShutdownState {
 	public final fun ifActive (Lkotlin/jvm/functions/Function0;)Lio/opentelemetry/kotlin/export/OperationResultCode;
 	public final fun ifActiveOrElse (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
 	public abstract fun isShutdown ()Z
+}
+
+public final class io/opentelemetry/kotlin/export/TelemetryExceptionHandlerKt {
+	public static final fun telemetryExceptionHandler (Ljava/lang/String;)Lkotlinx/coroutines/CoroutineExceptionHandler;
 }
 
 public final class io/opentelemetry/kotlin/export/TimeoutOperationKt {
