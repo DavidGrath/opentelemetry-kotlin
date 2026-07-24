@@ -5,14 +5,13 @@ import io.opentelemetry.kotlin.aliases.OtelJavaMeter
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.attributes.CompatAttributesModel
 import io.opentelemetry.kotlin.context.Context
-import io.opentelemetry.kotlin.context.toOtelJavaContext
 
 internal class IntegerCounterAdapter(
     override val name: String,
     override val unit: String?,
     override val description: String?,
     meter: OtelJavaMeter
-): IntegerCounter {
+) : IntegerCounter {
 
     private val counter: OtelJavaLongCounter
 
@@ -26,7 +25,6 @@ internal class IntegerCounterAdapter(
         }
         counter = builder.build()
     }
-
 
     override fun enabled(): Boolean {
         return counter.isEnabled()

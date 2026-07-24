@@ -5,14 +5,13 @@ import io.opentelemetry.kotlin.aliases.OtelJavaMeter
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.attributes.CompatAttributesModel
 import io.opentelemetry.kotlin.context.Context
-import io.opentelemetry.kotlin.context.toOtelJavaContext
 
 internal class LongCounterAdapter(
     override val name: String,
     override val unit: String?,
     override val description: String?,
     meter: OtelJavaMeter
-): LongCounter {
+) : LongCounter {
 
     private val counter: OtelJavaLongCounter
 

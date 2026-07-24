@@ -3,7 +3,7 @@ package io.opentelemetry.kotlin.metrics
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.context.Context
 
-internal object NoopTestLongCounter: LongCounter {
+internal object NoopTestLongCounter : LongCounter {
 
     override val name: String
         get() = "noop"
@@ -21,11 +21,10 @@ internal object NoopTestLongCounter: LongCounter {
         context: Context?,
         attributes: (AttributesMutator.() -> Unit)?
     ) {
-
     }
 }
 
-internal object NoopTestIntegerCounter: IntegerCounter {
+internal object NoopTestIntegerCounter : IntegerCounter {
 
     override val name: String
         get() = "noop"
@@ -43,12 +42,10 @@ internal object NoopTestIntegerCounter: IntegerCounter {
         context: Context?,
         attributes: (AttributesMutator.() -> Unit)?
     ) {
-
     }
 }
 
-
-internal object NoopTestFloatCounter: FloatCounter {
+internal object NoopTestFloatCounter : FloatCounter {
 
     override val name: String
         get() = "noop"
@@ -66,11 +63,10 @@ internal object NoopTestFloatCounter: FloatCounter {
         context: Context?,
         attributes: (AttributesMutator.() -> Unit)?
     ) {
-
     }
 }
 
-internal object NoopTestDoubleCounter: DoubleCounter {
+internal object NoopTestDoubleCounter : DoubleCounter {
 
     override val name: String
         get() = "noop"
@@ -88,6 +84,5 @@ internal object NoopTestDoubleCounter: DoubleCounter {
         context: Context?,
         attributes: (AttributesMutator.() -> Unit)?
     ) {
-
     }
 }

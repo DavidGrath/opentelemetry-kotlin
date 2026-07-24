@@ -8,7 +8,6 @@ internal class MeterAdapter(
     private val impl: OtelJavaMeter,
 ) : Meter {
 
-
     override fun createLongCounter(
         name: String,
         description: String?,
@@ -16,7 +15,4 @@ internal class MeterAdapter(
     ): LongCounter {
         return LongCounterAdapter(name, description, unit, impl)
     }
-
-
-
 }

@@ -11,8 +11,7 @@ internal class LongMetricRecordImpl(
     override val value: Long,
     override val unit: String?,
     override val description: String?,
-): LongMetricRecord {
-
+) : LongMetricRecord {
 
     private val lock by lazy {
         ReentrantReadWriteLock()
@@ -28,7 +27,6 @@ internal class LongMetricRecordImpl(
         get() = lock.read {
             attrs.attributes.toMap()
         }
-
 
     override fun setBooleanAttribute(key: String, value: Boolean) {
         lock.write {
@@ -102,4 +100,3 @@ internal class LongMetricRecordImpl(
         }
     }
 }
-

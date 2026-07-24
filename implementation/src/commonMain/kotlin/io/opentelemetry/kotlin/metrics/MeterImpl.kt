@@ -13,7 +13,6 @@ internal class MeterImpl(
 
     private val shutdownState: MutableShutdownState = MutableShutdownState()
 
-
     override fun createLongCounter(
         name: String,
         description: String?,
@@ -21,5 +20,4 @@ internal class MeterImpl(
     ): LongCounter {
         return LongCounterImpl(name, description, unit, contextFactory, null, shutdownState)
     }
-
 }

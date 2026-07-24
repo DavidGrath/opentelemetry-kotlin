@@ -3,14 +3,13 @@ package io.opentelemetry.kotlin.metrics
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.context.Context
 
-class FakeLongCounter: LongCounter {
+class FakeLongCounter : LongCounter {
 
     override fun add(
         value: Long,
         context: Context?,
         attributes: (AttributesMutator.() -> Unit)?
     ) {
-
     }
 
     override fun enabled(): Boolean {

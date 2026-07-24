@@ -6,7 +6,7 @@ import io.opentelemetry.kotlin.export.TelemetryCloseable
 /**
  * Processes metrics before they are exported as batches.
  */
-public interface MetricProcessor: TelemetryCloseable {
+public interface MetricProcessor : TelemetryCloseable {
 
     /**
      * Invoked when a metric record is emitted.

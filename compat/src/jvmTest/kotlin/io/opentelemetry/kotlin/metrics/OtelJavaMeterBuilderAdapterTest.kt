@@ -87,7 +87,6 @@ internal class OtelJavaMeterBuilderAdapterTest {
                 ): LongCounter {
                     return NoopTestLongCounter
                 }
-
             }
         }
     }

@@ -3,12 +3,12 @@ package io.opentelemetry.kotlin.metrics
 import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.context.Context
 
-internal object NoopIntegerCounter: IntegerCounter {
+internal object NoopIntegerCounter : IntegerCounter {
 
     override val name: String
         get() = "noop"
 
-    override val unit: String? =  null
+    override val unit: String? = null
 
     override val description: String? = null
 
@@ -21,6 +21,5 @@ internal object NoopIntegerCounter: IntegerCounter {
         context: Context?,
         attributes: (AttributesMutator.() -> Unit)?
     ) {
-
     }
 }

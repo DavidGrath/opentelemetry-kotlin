@@ -1,7 +1,6 @@
 package io.opentelemetry.kotlin.metrics
 
 import io.opentelemetry.kotlin.aliases.OtelJavaSdkMeterProvider
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -10,11 +9,6 @@ internal class FloatCounterAdapterTest {
 
     private val meterProvider = OtelJavaSdkMeterProvider.builder().build()
     private lateinit var adapter: FloatCounterAdapter
-
-    @BeforeTest
-    fun setUp() {
-
-    }
 
     @Test
     fun nullNameAndDescriptionTest() {

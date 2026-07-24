@@ -17,5 +17,4 @@ internal object NoopMeter : Meter {
     ): LongCounter {
         return NoopLongCounter
     }
-
 }

@@ -4,8 +4,8 @@ import io.opentelemetry.kotlin.attributes.AttributesMutator
 import io.opentelemetry.kotlin.context.Context
 import io.opentelemetry.kotlin.export.ShutdownState
 import io.opentelemetry.kotlin.factory.ContextFactory
-import io.opentelemetry.kotlin.metrics.export.MetricProcessor
 import io.opentelemetry.kotlin.metrics.export.LongMetricRecord
+import io.opentelemetry.kotlin.metrics.export.MetricProcessor
 
 internal class LongCounterImpl(
     override val name: String,
@@ -14,7 +14,7 @@ internal class LongCounterImpl(
     private val contextFactory: ContextFactory,
     private val processor: MetricProcessor?,
     private val shutdownState: ShutdownState,
-): LongCounter {
+) : LongCounter {
 
     override fun add(
         value: Long,
@@ -35,7 +35,6 @@ internal class LongCounterImpl(
         }
     }
 
-
     override fun enabled(): Boolean =
         if (shutdownState.isShutdown || processor == null) {
             false
@@ -44,4 +43,3 @@ internal class LongCounterImpl(
             processor.enabled(ctx, name)
         }
 }
-
